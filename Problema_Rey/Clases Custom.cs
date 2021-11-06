@@ -82,9 +82,9 @@ namespace Problema_Rey
                 movimientoAux[1] = movimientos[i, 1];
 
                 var mueveFueraIzq = _posicion[0] == 0 && movimientoAux[0] == -1;
-                var mueveFueraDch = _posicion[0] == 7 && movimientoAux[0] == 1;
+                var mueveFueraDch = _posicion[0] == Estado.DimensionesTablero[0]-1 && movimientoAux[0] == 1;
                 var mueveFueraArr = _posicion[1] == 0 && movimientoAux[1] == -1;
-                var mueveFueraAbj = _posicion[1] == 7 && movimientoAux[1] == 1;
+                var mueveFueraAbj = _posicion[1] == Estado.DimensionesTablero[1]-1 && movimientoAux[1] == 1;
 
                 if (mueveFueraIzq || mueveFueraDch || mueveFueraArr || mueveFueraAbj)
                 {
@@ -111,7 +111,7 @@ namespace Problema_Rey
         public Estado()
         {
             Rey = new Rey(new []{0,0});
-            Tablero = new int[8, 8];
+            Tablero = new int[DimensionesTablero[0], DimensionesTablero[1]];
             Pasos = 1;
             Tablero.SetValue(Pasos, Rey.Posicion[0], Rey.Posicion[1]);
         }
@@ -122,6 +122,17 @@ namespace Problema_Rey
             Pasos = previo.Pasos + 1;
             Tablero.SetValue(Pasos, Rey.Posicion[0], Rey.Posicion[1]);
         }
+        
+        // Constante
+        public static readonly int[] DimensionesTablero = new[]
+        {
+            // Dimensión X:
+            3,
+            // Dimensión Y:
+            3
+        };
+
+        public static readonly int LengthTablero = DimensionesTablero[0] * DimensionesTablero[1];
         
         // Variables
         private Rey _rey;
