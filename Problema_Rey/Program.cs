@@ -11,7 +11,7 @@ namespace Problema_Rey
             Console.WriteLine("Acabó!");
         }
 
-        private static void Bacotraco(Estado nodo)
+        private static void Bacotraco(Estado nodo, int iteraciones=0)
         {
             foreach (var movimiento in nodo.Rey.MovimientosDisponibles)
             {
@@ -21,12 +21,15 @@ namespace Problema_Rey
                 // Si la nueva posición no está en un punto visitado previamente por el rey, entra en el backtrack
                 if (NoHaySolapamiento(nodo.Tablero, siguiente.Rey.Posicion))
                 {
-                    Bacotraco(siguiente);
+                    iteraciones++;
+                    Bacotraco(siguiente, iteraciones);
                 }
             }
 
             if (nodo.Pasos != 64) return;
             PrintTablero(nodo.Tablero);
+            // Console.WriteLine(iteraciones);
+            // Console.ReadKey();
         }
 
         private static void PrintTablero(int[,] tablero)
