@@ -5,10 +5,12 @@ namespace Problema_Rey
 {
     class Program
     {
+        public static List<Estado> soluciones = new List<Estado>();
+        
         static void Main()
         {
             Bacotraco(new Estado());
-            Console.WriteLine("Acabó!");
+            Console.WriteLine("\nSoluciones: "+soluciones.Count);
         }
 
         private static void Bacotraco(Estado nodo)
@@ -27,6 +29,7 @@ namespace Problema_Rey
 
             if (nodo.Pasos != Estado.LengthTablero) return;
             PrintTablero(nodo.Tablero);
+            soluciones.Add(nodo);
         }
 
         private static void PrintTablero(int[,] tablero)
