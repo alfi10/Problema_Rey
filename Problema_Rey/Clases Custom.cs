@@ -106,9 +106,9 @@ namespace Problema_Rey
         }
         public Estado(Estado previo, int[] movimiento)
         {
-            Rey = rey;
-            Tablero = tablero;
-            Pasos = pasos;
+            // Rey = rey;
+            // Tablero = tablero;
+            // Pasos = pasos;
         }
         
         // Variables
