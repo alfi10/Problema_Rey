@@ -56,6 +56,17 @@ namespace Problema_Rey
         {
             return "X: " + Posicion[0] + ", Y: " + Posicion[1];
         }
+        public int[] NuevaPosicion(int[] movimiento)
+        {
+            // Devuelve la posición del rey  en función de posición previa más el movimiento introducido
+           
+            if (!MovimientosDisponibles.Contains(movimiento))
+            {
+                throw new Exception("MovimientoImposible");
+            }
+            
+            return new int[] {Posicion[0] + movimiento[0], Posicion[1] + movimiento[1]};
+        }  
 
         // Métodos privados
         private List<int[]> AsignarDisponibles(int[,] movimientos)
@@ -106,9 +117,10 @@ namespace Problema_Rey
         }
         public Estado(Estado previo, int[] movimiento)
         {
-            // Rey = rey;
-            // Tablero = tablero;
-            // Pasos = pasos;
+            Rey = new Rey(previo.Rey.NuevaPosicion(movimiento));
+            Tablero = ActualizarTablero(previo.Tablero);
+            Pasos = previo.Pasos + 1;
+            Tablero.SetValue(Pasos, Rey.Posicion[0], Rey.Posicion[1]);
         }
         
         // Variables
@@ -131,6 +143,14 @@ namespace Problema_Rey
         {
             get => _pasos;
             set => _pasos = value;
+        }
+        
+        // Métodos privados
+        private static int[,] ActualizarTablero(int[,] tableroPrevio)
+        {
+            var devolver = new int[tableroPrevio.GetLength(0), tableroPrevio.GetLength(1)];
+            Array.Copy(tableroPrevio, 0, devolver, 0, tableroPrevio.Length);
+            return devolver;
         }
     }
 }
