@@ -16,7 +16,7 @@ namespace Problema_Rey
         }
 
         // Constantes
-        public static readonly int[,] Movimientos = new int[,]
+        private static readonly int[,] Movimientos = new int[,]
         {
             // Arriba: izq, cent, dch
             {-1, -1},
@@ -58,28 +58,24 @@ namespace Problema_Rey
         }
 
         // Métodos privados
-        private void Mover() // int[]
-        {
-            // Devuelve la coordenada del Rey por cada 
-        }
         private List<int[]> AsignarDisponibles(int[,] movimientos)
         {
-            List<int[]> disponibles = new List<int[]>();
-            bool mueve_fuera_izq, mueve_fuera_arr, mueve_fuera_dch, mueve_fuera_abj;
-
-            for (int i = 0; i < movimientos.GetLength(0); i++)
+            var disponibles = new List<int[]>();
+            
+            // Recorre todos los movimientos posibles del rey para determinar si no te sacan del tablero
+            for (var i = 0; i < movimientos.GetLength(0); i++)
             {
-                int[] movimientoAux = new int[2];
+                var movimientoAux = new int[2];
 
                 movimientoAux[0] = movimientos[i, 0];
                 movimientoAux[1] = movimientos[i, 1];
 
-                mueve_fuera_izq = _posicion[0] == 0 && movimientoAux[0] == -1;
-                mueve_fuera_dch = _posicion[0] == 7 && movimientoAux[0] == 1;
-                mueve_fuera_arr = _posicion[1] == 0 && movimientoAux[1] == -1;
-                mueve_fuera_abj = _posicion[1] == 7 && movimientoAux[1] == 1;
+                var mueveFueraIzq = _posicion[0] == 0 && movimientoAux[0] == -1;
+                var mueveFueraDch = _posicion[0] == 7 && movimientoAux[0] == 1;
+                var mueveFueraArr = _posicion[1] == 0 && movimientoAux[1] == -1;
+                var mueveFueraAbj = _posicion[1] == 7 && movimientoAux[1] == 1;
 
-                if (mueve_fuera_izq || mueve_fuera_dch || mueve_fuera_arr || mueve_fuera_abj)
+                if (mueveFueraIzq || mueveFueraDch || mueveFueraArr || mueveFueraAbj)
                 {
                     continue;
                 }
@@ -97,32 +93,44 @@ namespace Problema_Rey
             return new[] {rand.Next(8), rand.Next(8)};
         }
     }
-    
+
     public class Estado
     {
         // Constructores
         public Estado()
         {
-            Rey = new Rey();
+            Rey = new Rey(new []{0,0});
             Tablero = new int[8, 8];
-            Pasos = 0;
-            Recorrible = true;
+            Pasos = 1;
+            Tablero.SetValue(Pasos, Rey.Posicion[0], Rey.Posicion[1]);
         }
+        public Estado(Estado previo, int[] movimiento)
+        {
+            Rey = rey;
+            Tablero = tablero;
+            Pasos = pasos;
+        }
+        
+        // Variables
+        private Rey _rey;
+        private int[,] _tablero;
+        private int _pasos;
 
         // Propiedades
-        public Rey Rey { get; set; }
-        public int[,] Tablero { get; set; }
-        public int Pasos { get; set; }
-        public bool Recorrible { get; set; }
-
-        // Métodos
-        private void ComprobarReyBloqueado(Rey rey) // bool
+        public Rey Rey
         {
-            foreach (var movimiento in rey.MovimientosDisponibles)
-            {
-                
-            }
+            get => _rey;
+            set => _rey = value;
+        }
+        public int[,] Tablero
+        {
+            get => _tablero;
+            set => _tablero = value;
+        }
+        public int Pasos
+        {
+            get => _pasos;
+            set => _pasos = value;
         }
     }
-
 }

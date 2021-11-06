@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Problema_Rey
 {
@@ -6,34 +7,36 @@ namespace Problema_Rey
     {
         static void Main()
         {
-            var rey = new Rey(new int[] {0, 0});
-            var tablero = new int[8, 8];
-            
-            for (int i = 1; i <= 64; i++)
-            {
-                // Actualiza la posición del rey en el tablero
-                tablero[rey.Posicion[0],rey.Posicion[1]] = i;
+            Bacotraco(new Estado());
+            Console.WriteLine("Acabó!");
+        }
 
-                foreach (var movimiento in rey.MovimientosDisponibles)
+        private static void Bacotraco(Estado nodo)
+        {
+            // Copia el nodo en una nueva variable que almacenará cada ramificación posible desde el nodo actual
+            // en función del movimiento que haga el rey
+            var siguiente = new Estado();
+
+            foreach (var movimiento in nodo.Rey.MovimientosDisponibles)
+            {
+                siguiente.Rey = ActualizarRey(nodo.Rey.Posicion, movimiento);
+                siguiente.Pasos = nodo.Pasos+1;
+                siguiente.Tablero = ActualizarTablero(nodo.Tablero, siguiente.Rey.Posicion, siguiente.Pasos);
+                
+                if (NoHaySolapamiento(nodo.Tablero, siguiente.Rey.Posicion))
                 {
-                    var nuevaPosX = rey.Posicion[0] + movimiento[0];
-                    var nuevaPosY = rey.Posicion[1] + movimiento[1];
-                    
-                    // Si el rey no ha visitado esa posición, mueve el rey ahí
-                    if (tablero[nuevaPosX, nuevaPosY]==0)
-                    {
-                        rey.Posicion = new[] {nuevaPosX, nuevaPosY};
-                        break;
-                    }
+                    // Crea un siguiente estado con el rey en la posición dada por su movimiento
+                    Bacotraco(siguiente);
                 }
             }
-            
-            PrintTablero(tablero);
+
+            if (nodo.Pasos != 64) return;
+            PrintTablero(nodo.Tablero);
         }
 
         private static void PrintTablero(int[,] tablero)
         {
-            // Dimensión xX del array en 'x' (0)
+            // Dimensión X del array en 'x' (0)
             // Dimensión Y del array en 'y' (1)
             const int x = 0;
             const int y = 1;
@@ -46,11 +49,34 @@ namespace Problema_Rey
                     // El tablero almacena si el rey ha pasado por una casilla y en que movimiento
                     // 0: No ha pasado
                     // [1, 64]: el movimiento en el que pasó
-                    Console.Write(" " + tablero[i, j] + " ");
+                    Console.Write("\t" + tablero[i, j]);
                 }
 
                 Console.WriteLine("");
             }
+            Console.WriteLine("");
+        }
+
+        private static Rey ActualizarRey(IReadOnlyList<int> posicion, IReadOnlyList<int> movimiento)
+        {
+            var nuevaPosicion = new [] {posicion[0] + movimiento[0], posicion[1] + movimiento[1]};
+            return new Rey(nuevaPosicion);
+        }
+
+        private static int[,] ActualizarTablero(int[,] tablero, IReadOnlyList<int> posicionRey, int paso)
+        {
+            // Crea el tablero que se devolverá.
+            var nuevoTablero = new int[8, 8];
+            // Lo llena con los valores del tablero previo
+            Array.Copy(tablero, 0, nuevoTablero, 0, tablero.Length);
+            // introduce el dato del nuevo movimiento en el tablero nuevo
+            nuevoTablero.SetValue(paso, posicionRey[0], posicionRey[1]);
+            return nuevoTablero;
+        }
+
+        private static bool NoHaySolapamiento(int[,] tableroPrevio, IReadOnlyList<int> posicionReyActual)
+        {
+            return tableroPrevio[posicionReyActual[0], posicionReyActual[1]] == 0;
         }
     }
 }
