@@ -108,9 +108,9 @@ namespace Problema_Rey
     public class Estado
     {
         // Constructores
-        public Estado()
+        public Estado(int posicionInicialReyX = 0, int posicionInicialReyY = 0)
         {
-            Rey = new Rey(new []{0,0});
+            Rey = new Rey(new []{posicionInicialReyX, posicionInicialReyY});
             Tablero = new int[DimensionesTablero[0], DimensionesTablero[1]];
             Pasos = 1;
             Tablero.SetValue(Pasos, Rey.Posicion[0], Rey.Posicion[1]);
@@ -127,7 +127,7 @@ namespace Problema_Rey
         public static readonly int[] DimensionesTablero = new[]
         {
             // Dimensión X:
-            3,
+            4,
             // Dimensión Y:
             3
         };

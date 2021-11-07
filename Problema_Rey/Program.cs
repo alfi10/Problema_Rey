@@ -5,15 +5,26 @@ namespace Problema_Rey
 {
     class Program
     {
-        public static List<Estado> soluciones = new List<Estado>();
-        
         static void Main()
         {
-            Bacotraco(new Estado());
+            var soluciones = Bacotraco(new Estado(), new List<Estado>());
+
+            // for (var x = 0; x < Estado.DimensionesTablero[0]; x++)
+            // {
+            //     for (var y = 0; y < Estado.DimensionesTablero[1]; y++)
+            //     {
+            //         Bacotraco(new Estado(x, y));
+            //         Console.WriteLine("\nSoluciones: "+soluciones.Count);
+            //
+            //     }
+            // }
+            
+            PrintSoluciones(soluciones);
+
             Console.WriteLine("\nSoluciones: "+soluciones.Count);
         }
 
-        private static void Bacotraco(Estado nodo)
+        private static List<Estado> Bacotraco(Estado nodo,  List<Estado> soluciones)
         {
             foreach (var movimiento in nodo.Rey.MovimientosDisponibles)
             {
@@ -23,15 +34,25 @@ namespace Problema_Rey
                 // Si la nueva posición no está en un punto visitado previamente por el rey, entra en el backtrack
                 if (NoHaySolapamiento(nodo.Tablero, siguiente.Rey.Posicion))
                 {
-                    Bacotraco(siguiente);
+                    Bacotraco(siguiente, soluciones);
                 }
             }
 
-            if (nodo.Pasos != Estado.LengthTablero) return;
-            PrintTablero(nodo.Tablero);
-            soluciones.Add(nodo);
+            if (nodo.Pasos == Estado.LengthTablero) soluciones.Add(nodo);
+            
+            return soluciones;
+
         }
 
+        private static void PrintSoluciones(List<Estado> soluciones)
+        {
+            // Imprime todas las soluciones de la lista global de soluciones
+            foreach (var solucion in soluciones)
+            {
+                PrintTablero(solucion.Tablero);
+            }
+        }
+        
         private static void PrintTablero(int[,] tablero)
         {
             // Dimensión X del array en 'x' (0)
