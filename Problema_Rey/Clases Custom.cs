@@ -36,20 +36,19 @@ namespace Problema_Rey
         };
         
         // Variables
-        private int[] _posicion;
-        private List<int[]> _movimientosDisponibles = new List<int[]>();
+        private readonly int[] _posicion;
 
         // Propiedades
         public int[] Posicion
         {
             get => _posicion;
-            set
+            private init
             {
                 _posicion = value;
-                _movimientosDisponibles = AsignarDisponibles(Movimientos);
+                MovimientosDisponibles = AsignarDisponibles(Movimientos);
             }
         }
-        public List<int[]> MovimientosDisponibles => _movimientosDisponibles;
+        public List<int[]> MovimientosDisponibles { get; private init; } = new List<int[]>();
 
         // Métodos públicos
         public override string ToString()
@@ -65,7 +64,7 @@ namespace Problema_Rey
                 throw new Exception("MovimientoImposible");
             }
             
-            return new int[] {Posicion[0] + movimiento[0], Posicion[1] + movimiento[1]};
+            return new [] {Posicion[0] + movimiento[0], Posicion[1] + movimiento[1]};
         }  
 
         // Métodos privados
@@ -135,27 +134,14 @@ namespace Problema_Rey
         public static readonly int LengthTablero = DimensionesTablero[0] * DimensionesTablero[1];
         
         // Variables
-        private Rey _rey;
-        private int[,] _tablero;
-        private int _pasos;
 
         // Propiedades
-        public Rey Rey
-        {
-            get => _rey;
-            set => _rey = value;
-        }
-        public int[,] Tablero
-        {
-            get => _tablero;
-            set => _tablero = value;
-        }
-        public int Pasos
-        {
-            get => _pasos;
-            set => _pasos = value;
-        }
-        
+        public Rey Rey { get; private init; }
+
+        public int[,] Tablero { get; private init; }
+
+        public int Pasos { get; private init; }
+
         // Métodos privados
         private static int[,] ActualizarTablero(int[,] tableroPrevio)
         {
