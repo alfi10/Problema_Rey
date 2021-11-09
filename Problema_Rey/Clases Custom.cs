@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static System.Math;
 
 namespace Problema_Rey
 {
@@ -13,6 +14,10 @@ namespace Problema_Rey
         public Rey(int[] posicion)
         {
             Posicion = posicion;
+        }
+        public Rey(int x, int y)
+        {
+            Posicion = new[] {x, y};
         }
 
         // Constantes
@@ -107,12 +112,21 @@ namespace Problema_Rey
     public class Estado
     {
         // Constructores
+        public Estado(int[] posicionInicial)
+        {
+            Rey = new Rey(posicionInicial);
+            Tablero = new int[DimensionesTablero[0], DimensionesTablero[1]];
+            Pasos = 1;
+            Tablero.SetValue(Pasos, Rey.Posicion[0], Rey.Posicion[1]);
+            Longitud = 0;
+        }
         public Estado(int posicionInicialReyX = 0, int posicionInicialReyY = 0)
         {
             Rey = new Rey(new []{posicionInicialReyX, posicionInicialReyY});
             Tablero = new int[DimensionesTablero[0], DimensionesTablero[1]];
             Pasos = 1;
             Tablero.SetValue(Pasos, Rey.Posicion[0], Rey.Posicion[1]);
+            Longitud = 0;
         }
         public Estado(Estado previo, int[] movimiento)
         {
@@ -120,27 +134,31 @@ namespace Problema_Rey
             Tablero = ActualizarTablero(previo.Tablero);
             Pasos = previo.Pasos + 1;
             Tablero.SetValue(Pasos, Rey.Posicion[0], Rey.Posicion[1]);
+            if (movimiento[0] == 0 || movimiento[1] == 0)
+            {
+                Longitud = previo.Longitud + 1;
+            }
+            else
+            {
+                Longitud = previo.Longitud + 1.4142135623730951;
+            }
         }
         
         // Constante
-        public static readonly int[] DimensionesTablero = new[]
+        public static readonly int[] DimensionesTablero =
         {
             // Dimensión X:
-            4,
+            8,
             // Dimensión Y:
-            3
+            8
         };
-
         public static readonly int LengthTablero = DimensionesTablero[0] * DimensionesTablero[1];
-        
-        // Variables
 
         // Propiedades
-        public Rey Rey { get; private init; }
-
-        public int[,] Tablero { get; private init; }
-
-        public int Pasos { get; private init; }
+        public Rey Rey { get; }
+        public int[,] Tablero { get; }
+        public int Pasos { get; }
+        public double Longitud { get; } 
 
         // Métodos privados
         private static int[,] ActualizarTablero(int[,] tableroPrevio)
