@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 
@@ -9,8 +10,13 @@ namespace Problema_Rey
     {
         static void Main()
         {
+            var input = Menu();
+            
+            // Convierte eñ input a int (El input es el tiempo que el programa trabajará)
+            var tiempoEnS = int.Parse((input=="" ? "1" : input) ?? throw new InvalidOperationException());
+            
             // Backtrack
-            var soluciones = Bacotraco(new Estado(), new List<Estado>(), 3000);
+            var soluciones = Bacotraco(new Estado(), new List<Estado>(), tiempoEnS*1000);
             
             // Halla las longitudes distintas entre las soluciones
             var longitudes = new List<double>();
@@ -22,14 +28,28 @@ namespace Problema_Rey
             // Halla el valor máximo de las longitudes de recorrido
             var max = soluciones.Count(miembro => miembro.Longitud.Equals(longitudes.Max()));
             
-            
             // Display de información por consola
             Console.WriteLine("\nSoluciones: "+soluciones.Count);
             Console.WriteLine("Long. max: "+longitudes.Max());
             Console.WriteLine("Soluciones de Long. max: "+max);
         }
 
-        private static List<Estado> Bacotraco(Estado nodo, List<Estado> soluciones, int tiempoEnMs=0, Stopwatch crono=null)
+        private static string Menu()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Bienvenido al Problema del Rey");
+            Console.WriteLine("");
+            Console.WriteLine("El algoritmo recorrerá un tablero de ajedrez con un rey para intentar obtener");
+            Console.WriteLine("todos los caminos que puede hacer sin pisar 2 veces la misma casilla");
+            Console.WriteLine("");
+            Console.WriteLine("Aviso: es imposible que obtenga todas las posibilidades en tu corta vida, usuario");
+            Console.WriteLine("Por ello, a continuación se te pedirá que introduzcas el tiempo que quieres que el algoritmo trabaje");
+            Console.WriteLine("Si no introduces un tiempo, el algoritmo trabajará 1 segundo");
+            Console.WriteLine("");
+            Console.Write("Introduce el tiempo (segundos): ");
+            return Console.ReadLine();
+        }
+        private static List<Estado> Bacotraco(Estado nodo, List<Estado> soluciones, int tiempoEnMs, Stopwatch crono=null)
         {
             
             // Si no se le ha pasado un crono, lo instancia y empieza a contar
@@ -56,7 +76,6 @@ namespace Problema_Rey
             soluciones.Add(nodo);
             return soluciones;
         }
-
         private static int[] EncontrarCoordenadaInicial(int[,] tablero)
         {
             for (var x = 0; x < tablero.GetLength(0); x++)
@@ -72,7 +91,6 @@ namespace Problema_Rey
         
             throw new Exception("NoHayCoordenadaInicial");
         }
-        
         private static void PrintSoluciones(List<Estado> soluciones)
         {
             // Imprime todas las soluciones de la lista global de soluciones
@@ -83,7 +101,6 @@ namespace Problema_Rey
                 Console.WriteLine("");
             }
         }
-        
         private static void PrintTablero(int[,] tablero)
         {
             // Dimensión X del array en 'x' (0)
@@ -106,7 +123,6 @@ namespace Problema_Rey
             }
             Console.WriteLine("");
         }
-        
         private static bool NoHaySolapamiento(int[,] tableroPrevio, IReadOnlyList<int> posicionReyActual)
         {
             return tableroPrevio[posicionReyActual[0], posicionReyActual[1]] == 0;
