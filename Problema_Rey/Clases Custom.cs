@@ -148,9 +148,9 @@ namespace Problema_Rey
         public static readonly int[] DimensionesTablero =
         {
             // Dimensión X:
-            8,
+            4,
             // Dimensión Y:
-            8
+            4
         };
         public static readonly int LengthTablero = DimensionesTablero[0] * DimensionesTablero[1];
 

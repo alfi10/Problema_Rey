@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 
@@ -12,7 +11,7 @@ namespace Problema_Rey
         {
             var input = Menu();
             
-            // Convierte eñ input a int (El input es el tiempo que el programa trabajará)
+            // Convierte el input a int (El input es el tiempo que el programa trabajará)
             var tiempoEnS = int.Parse((input=="" ? "1" : input) ?? throw new InvalidOperationException());
             
             // Backtrack
@@ -27,6 +26,8 @@ namespace Problema_Rey
             
             // Halla el valor máximo de las longitudes de recorrido
             var max = soluciones.Count(miembro => miembro.Longitud.Equals(longitudes.Max()));
+            
+            PrintSoluciones(soluciones);
             
             // Display de información por consola
             Console.WriteLine("\nSoluciones: "+soluciones.Count);
@@ -66,7 +67,9 @@ namespace Problema_Rey
             }
             
             // Bucle que entra en cada ramificación posible del nodo evaluado
-            foreach (var siguiente in nodo.Rey.MovimientosDisponibles.Select(movimiento => new Estado(nodo, movimiento)).Where(siguiente => NoHaySolapamiento(nodo.Tablero, siguiente.Rey.Posicion)))
+            foreach (var siguiente in nodo.Rey.MovimientosDisponibles.Select(
+                movimiento => new Estado(nodo, movimiento)).Where(
+                siguiente => NoHaySolapamiento(nodo.Tablero, siguiente.Rey.Posicion)))
             {
                 Bacotraco(siguiente, soluciones, tiempoEnMs, crono);
             }
@@ -75,21 +78,6 @@ namespace Problema_Rey
             if (nodo.Pasos != Estado.LengthTablero) return soluciones;
             soluciones.Add(nodo);
             return soluciones;
-        }
-        private static int[] EncontrarCoordenadaInicial(int[,] tablero)
-        {
-            for (var x = 0; x < tablero.GetLength(0); x++)
-            {
-                for (var y = 0; y < tablero.GetLength(1); y++)
-                {
-                    if (tablero[x, y] == 1)
-                    {
-                        return new[] {x, y};
-                    }
-                }
-            }
-        
-            throw new Exception("NoHayCoordenadaInicial");
         }
         private static void PrintSoluciones(List<Estado> soluciones)
         {
